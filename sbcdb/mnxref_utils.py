@@ -55,8 +55,8 @@ class MnxRefReader(object):
 
     def __read_chem_prop(self):
         '''Read chemical properties and create Nodes.'''
-        chem_prop_keys = ['id', 'name', 'formula', 'charge:float',
-                          'mass:float', 'inchi', 'smiles', 'source']
+        chem_prop_keys = ['id', 'name', 'source', 'formula', 'charge:float',
+                          'mass:float', 'inchi', 'inchikey', 'smiles']
 
         for values in self.__read_data('chem_prop.tsv'):
             if not values[0].startswith('#'):
@@ -64,6 +64,8 @@ class MnxRefReader(object):
                 values[7] = self.__parse_id(values[7])
                 props = dict(zip(chem_prop_keys, values))
                 props.pop('source')
+                #print values
+                #print props
                 _convert_to_float(props, 'charge:float')
                 _convert_to_float(props, 'mass:float')
                 props = {key: value for key, value in props.iteritems()
@@ -101,8 +103,8 @@ class MnxRefReader(object):
 
     def __read_reac_prop(self):
         '''Read reaction properties and create Nodes.'''
-        reac_prop_keys = ['id', 'equation', 'description', 'balance', 'ec',
-                          'Source']
+        reac_prop_keys = ['id', 'equation','Source', 'ec', 'balance',
+                          'transport']
 
         for values in self.__read_data('reac_prop.tsv'):
             if not values[0].startswith('#'):
@@ -194,8 +196,14 @@ class MnxRefLoader(object):
                                  chem_id])
 
             if all([values[0] is not None for values in reac_def]):
-                balanced, _, balanced_def = balance.balance_reac(reac_def)
-                properties['balance'] = balanced
+                #print mnx_id,reac_def
+                try:
+                    balanced, _, balanced_def = balance.balance_reac(reac_def)
+                    properties['balance'] = balanced
+                except ValueError as e:
+                    properties['balance'] = 'balance error'
+                    balanced_def = reac_def
+                    print "Balance reaction ({0}) cause ValueError: {1}".format(mnx_id,e.message)
             else:
                 properties['balance'] = 'unknown'
                 balanced_def = reac_def
