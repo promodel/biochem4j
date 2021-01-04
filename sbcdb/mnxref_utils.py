@@ -11,6 +11,8 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 # pylint: disable=too-few-public-methods
 # pylint: disable=too-many-locals
 from collections import Counter
+import requests
+from contextlib import closing
 import csv
 import itertools
 import math
@@ -139,8 +141,15 @@ class MnxRefReader(object):
     def __read_data(self, filename):
         '''Downloads and reads tab-limited files into lists of lists of
         strings.'''
-        return list(csv.reader(urllib.request.urlopen(self.__source + filename).read().decode('utf-8'),
-                               delimiter='\t'))
+        url = self.__source + filename
+        data=[]
+        with closing(requests.get(url, stream=True)) as r:
+            f = (line.decode('utf-8') for line in r.iter_lines())
+            reader = csv.reader(f, delimiter='\t', quotechar='"')
+            for row in reader:
+                data.append(row)
+
+        return data
 
     def __parse_id(self, item_id):
         '''Parses mnx ids.'''
