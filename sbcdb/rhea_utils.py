@@ -8,7 +8,7 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 @author:  neilswainston
 '''
 import tempfile
-import urllib
+import urllib.request
 
 
 __RHEA_URL = 'ftp://ftp.ebi.ac.uk/pub/databases/rhea/tsv/rhea2uniprot.tsv'
@@ -18,7 +18,7 @@ def load(reaction_manager, source=__RHEA_URL, num_threads=0):
     '''Loads Rhea data.'''
     # Parse data:
     temp_file = tempfile.NamedTemporaryFile()
-    urllib.urlretrieve(source, temp_file.name)
+    urllib.request.urlretrieve(source, temp_file.name)
     data = _parse(temp_file.name)
     reaction_manager.add_react_to_enz(data, 'rhea', num_threads)
 
