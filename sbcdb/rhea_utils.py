@@ -37,7 +37,7 @@ def _parse(filename):
                 uniprot_id = tokens[3].strip()
 
                 if not tokens[0] or not tokens[2]:
-                    print ','.join(tokens)
+                    print (','.join(tokens))
 
                 _add(data, tokens[0], uniprot_id)
                 _add(data, tokens[2], uniprot_id)

@@ -70,7 +70,7 @@ class ReactionManager(object):
         '''Creates Reaction and Enzyme nodes and their Relationships.'''
         enzyme_ids = []
 
-        for reac_id, uniprot_ids in data.iteritems():
+        for reac_id, uniprot_ids in data.items():
             reac_id = self.add_reaction(source, reac_id, {})
 
             for uniprot_id in uniprot_ids:

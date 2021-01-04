@@ -11,7 +11,7 @@ import os
 import sys
 import tarfile
 import tempfile
-import urllib
+import urllib.request
 
 
 __NCBITAXONOMY_URL = 'ftp://ftp.ncbi.nih.gov/pub/taxonomy/taxdump.tar.gz'
@@ -31,7 +31,7 @@ def _get_ncbi_taxonomy_files(source):
     '''Downloads and extracts NCBI Taxonomy files.'''
     temp_dir = tempfile.gettempdir()
     temp_gzipfile = tempfile.NamedTemporaryFile()
-    urllib.urlretrieve(source, temp_gzipfile.name)
+    urllib.request.urlretrieve(source, temp_gzipfile.name)
 
     temp_tarfile = tarfile.open(temp_gzipfile.name, 'r:gz')
     temp_tarfile.extractall(temp_dir)
@@ -77,7 +77,7 @@ def _parse_names(nodes, filename, array_delimiter):
             else:
                 node['names:string[]'].add(tokens[1])
 
-    for _, node in nodes.iteritems():
+    for _, node in nodes.items():
         if 'names:string[]' in node:
             node['names:string[]'] = \
                 array_delimiter.join(node['names:string[]'])

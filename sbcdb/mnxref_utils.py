@@ -15,7 +15,7 @@ import csv
 import itertools
 import math
 import re
-import urllib2
+import urllib.request
 
 import numpy
 from subliminal import balance
@@ -68,7 +68,7 @@ class MnxRefReader(object):
                 #print props
                 _convert_to_float(props, 'charge:float')
                 _convert_to_float(props, 'mass:float')
-                props = {key: value for key, value in props.iteritems()
+                props = {key: value for key, value in props.items()
                          if value != ''}
                 self.__chem_data[values[0]] = props
 
@@ -127,8 +127,8 @@ class MnxRefReader(object):
                     props['reac_defn'] = participants
                     self.__reac_data[values[0]] = props
                 except ValueError:
-                    print 'WARNING: Suspected polymerisation reaction: ' + \
-                        values[0] + '\t' + str(props)
+                    print( 'WARNING: Suspected polymerisation reaction: ' + \
+                        values[0] + '\t' + str(props))
 
     def __add_chem(self, chem_id):
         '''Adds a chemical with given id.'''
@@ -139,7 +139,7 @@ class MnxRefReader(object):
     def __read_data(self, filename):
         '''Downloads and reads tab-limited files into lists of lists of
         strings.'''
-        return list(csv.reader(urllib2.urlopen(self.__source + filename),
+        return list(csv.reader(urllib.request.urlopen(self.__source + filename).read().decode('utf-8'),
                                delimiter='\t'))
 
     def __parse_id(self, item_id):
@@ -203,7 +203,7 @@ class MnxRefLoader(object):
                 except ValueError as e:
                     properties['balance'] = 'balance error'
                     balanced_def = reac_def
-                    print "Balance reaction ({0}) cause ValueError: {1}".format(mnx_id,e.message)
+                    print ("Balance reaction ({0}) cause ValueError: {1}".format(mnx_id,e.message))
             else:
                 properties['balance'] = 'unknown'
                 balanced_def = reac_def
@@ -215,13 +215,13 @@ class MnxRefLoader(object):
         chem_id_mass = self.__chem_man.get_props('monoisotopic_mass:float',
                                                  float('NaN'))
         cofactors = [chem_id
-                     for chem_id, mass in chem_id_mass.iteritems()
+                     for chem_id, mass in chem_id_mass.items()
                      if mass > 0 and mass < 44]  # Assume mass < CO2 = cofactor
 
         cofactor_pairs = _calc_cofactors(reac_id_def.values(), cofactors)
         rels = []
 
-        for reac_id, defn in reac_id_def.iteritems():
+        for reac_id, defn in reac_id_def.items():
             reactants = [term[3] for term in defn if term[2] < 0]
             products = [term[3] for term in defn if term[2] > 0]
             reac_cofactors = []

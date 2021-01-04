@@ -54,7 +54,7 @@ class ChemicalManager(object):
     def get_props(self, prop, default=None):
         '''Gets all chem_ids to property as a dict.'''
         return {key: self.__nodes[chem_id].get(prop, default)
-                for key, chem_id in self.__chem_ids.iteritems()}
+                for key, chem_id in self.__chem_ids.items()}
 
     def get_prop(self, chem_id, prop, default=None):
         '''Gets a property.'''
@@ -69,14 +69,14 @@ class ChemicalManager(object):
             try:
                 chebi_id, chebi_ent = _get_chebi_data(chebi_id, properties,
                                                       self.__array_delimiter)
-            except ChebiException, err:
+            except ChebiException as err:
                 properties.pop('chebi')
                 chebi_id = None
-                print err
-            except ValueError, err:
+                print( err)
+            except ValueError as err:
                 properties.pop('chebi')
                 chebi_id = None
-                print err
+                print(err)
 
         mnx_id = properties.get('mnx', None)
         inchi_id = properties.get('inchi', None)

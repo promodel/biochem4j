@@ -9,7 +9,7 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 '''
 import os
 import tempfile
-from urllib import urlretrieve
+from urllib.request import urlretrieve
 import zipfile
 
 import ijson

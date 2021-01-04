@@ -37,7 +37,7 @@ class EnzymeManager(object):
                                                       verbose=True,
                                                       num_threads=num_threads)
 
-        for uniprot_id, uniprot_value in uniprot_values.iteritems():
+        for uniprot_id, uniprot_value in uniprot_values.items():
             enzyme_node = {':LABEL': 'Enzyme',
                            'uniprot:ID(Enzyme)': uniprot_id}
             self.__nodes[uniprot_id] = enzyme_node
